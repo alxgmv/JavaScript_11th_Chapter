@@ -1,55 +1,30 @@
+let req = new XMLHttpRequest();
+let API_KEY = 'trnsl.1.1.20200211T152056Z.000c8753ab3cef91.aa7ecf804b48e056f53b1a778c917e1211bedec4';
+let url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
+let translateBtn = document.querySelector('#translate_btn');
+let statusLine = document.querySelector('.status');
+let insertLine = document.querySelector('.response');
+let userWord = '';
 
-
-  // Создаем объект XMLHttpRequest, при помощи которого будем отправлять запрос
-  let req = new XMLHttpRequest();
-
-  // Сохраняем ключ API, полученный со страницы https://tech.yandex.ru/keys/get/?service=trnsl
-  // (с примером ниже работать не будет, нужно получить и вставить свой!)
-  let API_KEY = 'trnsl.1.1.20200211T152056Z.000c8753ab3cef91.aa7ecf804b48e056f53b1a778c917e1211bedec4';
-
-  // Сохраняем адрес API
-  let url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
-  let userWord = document.querySelector('#input_word').innerText;
-  let translateBtn = document.querySelector('#translate_btn');
-  let statusLine = document.querySelector('.status');
-  let insertLine = document.querySelector('.response');
-
-  translateBtn.addEventListener('click', function() {
-    url += '?key=' + API_KEY; // добавляем к запросу ключ API
-    url += '&text=hair' // текст для перевода
-    url += '&lang=en-ru'; // направление перевода: с русского на английский
-  })
-  // Формируем полный адрес запроса:
-
-
-  // Таким образом формируется строка вида:
-  // https://translate.yandex.net/api/v1.5/tr.json/translate?key=example_api_key&text=кролики&lang=ru-en
-
-  // let translate = document.querySelector('.translate');
-
-  // Назначаем обработчик события load
+translateBtn.addEventListener('click', function() {
+  userWord = document.querySelector('#input_word').value;
+  url += '?key=' + API_KEY;
+  url += '&text=' + userWord;
+  url += '&lang=en-ru';
   req.addEventListener('load', function () {
-    console.log(req.response); // отображаем в консоли текст ответа сервера
-    let response = JSON.parse(req.response); // парсим его из JSON-строки в JavaScript-объект
-
-    // Проверяем статус-код, который прислал сервер
-    // 200 — это ОК, остальные — ошибка или что-то другое
+    console.log(req.response);
+    let response = JSON.parse(req.response);
     if (response.code !== 200) {
       statusLine.innerHTML = 'Произошла ошибка при получении ответа от сервера:\n\n' + response.message;
-      return;
+    return;
     }
-
-    // Проверяем, найден ли перевод для данного слова
     if (response.text.length === 0) {
       statusLine.innerHTML = 'К сожалению, перевод для данного слова не найден';
-      return;
+    return;
     }
-
-    // Если все в порядке, то отображаем перевод на странице
-    insertLine.innerHTML = response.text.join('<br>'); // вставляем его на страницу
-  });
-
-  // Обработчик готов, можно отправлять запрос
-  // Открываем соединение и отправляем
+    insertLine.innerText = response.text;
+    url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
+  })
   req.open('get', url);
   req.send();
+})

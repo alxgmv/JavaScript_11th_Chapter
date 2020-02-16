@@ -8,7 +8,7 @@ html, body {
 body {
   font-family: 'Ubuntu', serif;
   font-size: 36px;
-  background: black;
+  background: grey;
   color: #fff;
 }
 
@@ -19,4 +19,12 @@ body {
   height: 100%;
   justify-content: center;
   align-items: center;
+}
+.response {
+  color:black;
+}
+
+#translate_btn {
+  margin-top: 20px;
+  border: 1px solid white;
 }
